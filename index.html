@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Pulse | দৈনিক বাতৰি — Live News Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,600;0,6..72,700;1,6..72,400&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #faf9f6;
+      --bg-surface: #ffffff;
+      --bg-muted: #f1efe9;
+      --text-primary: #141413;
+      --text-secondary: #52514d;
+      --border-color: #e4e1d8;
+      --accent-red: #c81e1e;
+      --accent-red-soft: rgba(200, 30, 30, 0.1);
+      --accent-blue: #1d4ed8;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --radius: 12px;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #111214;
+      --bg-surface: #1a1c20;
+      --bg-muted: #24272c;
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --border-color: #2e3238;
+      --accent-red: #ef4444;
+      --accent-red-soft: rgba(239, 68, 68, 0.15);
+      --accent-blue: #60a5fa;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Bengali', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color 0.25s, color 0.25s;
+    }
+
+    /* Top Utility Bar */
+    .top-bar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: var(--accent-red);
+      background: var(--accent-red-soft);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-red);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.5; }
+      100% { transform: scale(0.95); opacity: 1; }
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      border-color: var(--text-secondary);
+    }
+
+    .btn-primary {
+      background: var(--accent-red);
+      color: #fff;
+      border-color: var(--accent-red);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      border-color: var(--accent-red);
+    }
+
+    /* Masthead */
+    header.masthead {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand h1 {
+      font-family: 'Newsreader', 'Noto Sans Bengali', serif;
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.92rem;
+    }
+
+    /* Category Nav */
+    .nav-wrapper {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .cat-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .cat-nav::-webkit-scrollbar { display: none; }
+
+    .cat-pill {
+      white-space: nowrap;
+      padding: 7px 15px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .cat-pill.active, .cat-pill:hover {
+      background: var(--text-primary);
+      color: var(--bg-surface);
+      border-color: var(--text-primary);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 20px 60px;
+    }
+
+    /* Breaking Hero Card */
+    .hero-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    @media (max-width: 820px) {
+      .hero-card { grid-template-columns: 1fr; }
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent-red);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .hero-card h2 {
+      font-family: 'Newsreader', 'Noto Sans Bengali', serif;
+      font-size: 1.75rem;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .hero-card p {
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      margin-bottom: 16px;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: var(--bg-muted);
+    }
+
+    /* News Grid */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 20px;
+    }
+
+    .news-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .news-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-thumb {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      background: var(--bg-muted);
+    }
+
+    .card-body {
+      padding: 18px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .source-tag {
+      color: var(--accent-red);
+    }
+
+    .card-title {
+      font-family: 'Newsreader', 'Noto Sans Bengali', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* Loader & Status */
+    .status-box {
+      text-align: center;
+      padding: 48px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      color: var(--text-secondary);
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border-color);
+      border-top-color: var(--accent-red);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      max-width: 640px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 5px;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span class="live-badge"><span class="live-dot"></span> LIVE FEED</span>
+      <span id="currentDate"></span>
+    </div>
+    <div class="controls-group">
+      <button class="btn" id="langToggle" onclick="toggleLanguage()">অসমীয়া / EN</button>
+      <button class="btn" id="refreshBtn" onclick="fetchLiveNews()">↻ Refresh</button>
+      <button class="btn btn-primary" onclick="openPostModal()">+ Post Update</button>
+      <button class="btn" id="themeToggle" onclick="toggleTheme()">🌙</button>
+    </div>
+  </div>
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="brand">
+      <h1 id="appTitle">Daily Pulse | দৈনিক বাতৰি</h1>
+      <p id="appSubtitle">Real-time Assam, India & World Live News Aggregator</p>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search headlines..." oninput="renderFilteredNews()">
+    </div>
+  </header>
+
+  <!-- Navigation Categories -->
+  <div class="nav-wrapper">
+    <nav class="cat-nav" id="categoryNav"></nav>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <div id="heroSection"></div>
+    <div id="newsContainer"></div>
+  </main>
+
+  <!-- Reader Modal -->
+  <div class="modal-backdrop" id="readerModal" onclick="closeModalOnBackdrop(event, 'readerModal')">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <span class="source-tag" id="modalSource" style="font-size:0.82rem; font-weight:700;"></span>
+          <h2 id="modalTitle" style="font-family:'Newsreader','Noto Sans Bengali',serif; margin-top:4px;"></h2>
+        </div>
+        <button class="btn" onclick="closeModal('readerModal')">✕</button>
+      </div>
+      <p id="modalDate" style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:14px;"></p>
+      <div id="modalContent" style="font-size:1rem; line-height:1.7; margin-bottom:20px;"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a id="modalOriginalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read Full Story ↗</a>
+        <button class="btn" id="modalCopyBtn" onclick="copyCurrentModalText()">Copy Summary</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Post Modal -->
+  <div class="modal-backdrop" id="postModal" onclick="closeModalOnBackdrop(event, 'postModal')">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="postModalHeading">Publish Custom News / Notice</h3>
+        <button class="btn" onclick="closeModal('postModal')">✕</button>
+      </div>
+      <form onsubmit="saveCustomPost(event)">
+        <div class="form-group">
+          <label>Headline / শিৰোনাম</label>
+          <input type="text" id="postTitle" required placeholder="Enter news headline...">
+        </div>
+        <div class="form-group">
+          <label>Category / বিভাগ</label>
+          <select id="postCategory">
+            <option value="assam">Assam & North East (অসম)</option>
+            <option value="india">India (ভাৰত)</option>
+            <option value="world">World (বিশ্ব)</option>
+            <option value="tech">Technology (প্ৰযুক্তি)</option>
+            <option value="sports">Sports (ক্ৰীড়া)</option>
+            <option value="business">Business (ব্যৱসায়)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Source Name / উৎস</label>
+          <input type="text" id="postSource" value="Local Desk">
+        </div>
+        <div class="form-group">
+          <label>Details / বিৱৰণ</label>
+          <textarea id="postBody" rows="4" required placeholder="Write the full update here..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Publish Now</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    Daily Pulse Live News Portal • Powered by Real-Time Google News RSS Feeds
+  </footer>
+
+  <script>
+    // Configuration & State
+    let currentLang = localStorage.getItem('dp_lang') || 'en';
+    let currentCat = 'assam';
+    let allArticles = [];
+    let activeModalArticle = null;
+
+    const categories = [
+      { id: 'assam', en: 'Assam & North East', as: 'অসম আৰু উত্তৰ-পূব' },
+      { id: 'india', en: 'India', as: 'ভাৰত' },
+      { id: 'world', en: 'World', as: 'বিশ্ব' },
+      { id: 'tech', en: 'Technology', as: 'প্ৰযুক্তি' },
+      { id: 'sports', en: 'Sports', as: 'ক্ৰীড়া' },
+      { id: 'business', en: 'Business', as: 'ব্যৱসায়' },
+      { id: 'saved', en: 'Saved ★', as: 'সংৰক্ষিত ★' }
+    ];
+
+    // Live Google News RSS Endpoints (Free & Real-Time)
+    const rssEndpoints = {
+      en: {
+        assam: 'https://news.google.com/rss/search?q=Assam+Guwahati+Northeast+India&hl=en-IN&gl=IN&ceid=IN:en',
+        india: 'https://news.google.com/rss/headlines/section/topic/NATION?hl=en-IN&gl=IN&ceid=IN:en',
+        world: 'https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-IN&gl=IN&ceid=IN:en',
+        tech: 'https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-IN&gl=IN&ceid=IN:en',
+        sports: 'https://news.google.com/rss/headlines/section/topic/SPORTS?hl=en-IN&gl=IN&ceid=IN:en',
+        business: 'https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-IN&gl=IN&ceid=IN:en'
+      },
+      as: {
+        assam: 'https://news.google.com/rss/search?q=%E0%A6%85%E0%A6%B8%E0%A6%AE+%E0%A6%97%E0%A7%81%E0%A7%B1%E0%A6%BE%E0%A6%B9%E0%A6%BE%E0%A6%9F%E0%A7%80&hl=as&gl=IN&ceid=IN:as',
+        india: 'https://news.google.com/rss/search?q=%E0%A6%AD%E0%A6%BE%E0%A7%B0%E0%A6%A4+%E0%A6%AC%E0%A6%BE%E0%A6%A4%E0%A7%B0%E0%A6%BF&hl=as&gl=IN&ceid=IN:as',
+        world: 'https://news.google.com/rss/search?q=%E0%A6%AC%E0%A6%BF%E0%A6%B6%E0%A7%8D%E0%A6%AC+%E0%A6%AC%E0%A6%BE%E0%A6%A4%E0%A7%B0%E0%A6%BF&hl=as&gl=IN&ceid=IN:as',
+        tech: 'https://news.google.com/rss/search?q=%E0%A6%AA%E0%A7%8D%E0%A7%B0%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%E0%A6%BF+%E0%A6%AC%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%A8&hl=as&gl=IN&ceid=IN:as',
+        sports: 'https://news.google.com/rss/search?q=%E0%A6%95%E0%A7%8D%E0%A7%B0%E0%A7%80%E0%A7%9C%E0%A6%BE+%E0%A6%95%E0%A7%8D%E0%A7%B0%E0%A6%BF%E0%A6%95%E0%A7%87%E0%A6%9F&hl=as&gl=IN&ceid=IN:as',
+        business: 'https://news.google.com/rss/search?q=%E0%A6%85%E0%A7%B0%E0%A7%8D%E0%A6%A5%E0%A6%A8%E0%A7%80%E0%A6%A4%E0%A6%BF+%E0%A6%AC%E0%A7%8D%E0%A6%AF%E0%A7%B1%E0%A6%B8%E0%A6%BE%E0%A7%9F&hl=as&gl=IN&ceid=IN:as'
+      }
+    };
+
+    const fallbackImages = {
+      assam: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=800&q=80',
+      india: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80',
+      world: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80',
+      tech: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
+      sports: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=800&q=80',
+      business: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80'
+    };
+
+    // Initialize
+    function init() {
+      applySavedTheme();
+      updateDateDisplay();
+      updateStaticLabels();
+      renderCategories();
+      fetchLiveNews();
+    }
+
+    function updateDateDisplay() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('currentDate').textContent = now.toLocaleDateString(currentLang === 'as' ? 'as-IN' : 'en-IN', options);
+    }
+
+    function updateStaticLabels() {
+      document.getElementById('langToggle').textContent = currentLang === 'en' ? 'অসমীয়া পঢ়ক' : 'Read in English';
+      document.getElementById('searchInput').placeholder = currentLang === 'en' ? 'Search live headlines...' : 'বাতৰি বিচাৰক...';
+      document.getElementById('appSubtitle').textContent = currentLang === 'en'
+        ? 'Real-time Assam, India & World Live News Aggregator'
+        : 'অসম, ভাৰত আৰু বিশ্বৰ শেহতীয়া লাইভ বাতৰি';
+    }
+
+    function renderCategories() {
+      const nav = document.getElementById('categoryNav');
+      nav.innerHTML = categories.map(cat => `
+        <button class="cat-pill ${currentCat === cat.id ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+          ${currentLang === 'as' ? cat.as : cat.en}
+        </button>
+      `).join('');
+    }
+
+    function selectCategory(catId) {
+      currentCat = catId;
+      renderCategories();
+      if (catId === 'saved') {
+        renderSavedNews();
+      } else {
+        fetchLiveNews();
+      }
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'as' : 'en';
+      localStorage.setItem('dp_lang', currentLang);
+      updateDateDisplay();
+      updateStaticLabels();
+      renderCategories();
+      if (currentCat === 'saved') {
+        renderSavedNews();
+      } else {
+        fetchLiveNews();
+      }
+    }
+
+    // Fetch Live RSS via rss2json proxy (with fallback)
+    async function fetchLiveNews() {
+      if (currentCat === 'saved') {
+        renderSavedNews();
+        return;
+      }
+
+      const container = document.getElementById('newsContainer');
+      const hero = document.getElementById('heroSection');
+      hero.innerHTML = '';
+      container.innerHTML = `
+        <div class="status-box">
+          <div class="spinner"></div>
+          <p>${currentLang === 'en' ? 'Fetching latest live news...' : 'শেহতীয়া লাইভ বাতৰি সংগ্ৰহ কৰি থকা হৈছে...'}</p>
+        </div>
+      `;
+
+      const rssUrl = rssEndpoints[currentLang][currentCat];
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        const customPosts = getCustomPosts().filter(p => p.category === currentCat);
+
+        if (data.status === 'ok' && Array.isArray(data.items)) {
+          const liveItems = data.items.map((item, idx) => {
+            const cleanTitle = item.title.replace(/\s-\s[^-]+$/, '');
+            const sourceMatch = item.title.match(/\s-\s([^-]+)$/);
+            const sourceName = sourceMatch ? sourceMatch[1] : (item.author || 'News Desk');
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = item.description || '';
+            const plainDesc = tempDiv.textContent || tempDiv.innerText || cleanTitle;
+
+            return {
+              id: 'live_' + btoa(encodeURIComponent(item.link)).slice(0, 16) + '_' + idx,
+              title: cleanTitle,
+              description: plainDesc,
+              source: sourceName,
+              pubDate: item.pubDate,
+              link: item.link,
+              image: item.thumbnail || item.enclosure?.link || fallbackImages[currentCat],
+              category: currentCat
+            };
+          });
+
+          allArticles = [...customPosts, ...liveItems];
+          renderFilteredNews();
+        } else {
+          throw new Error('Feed unavailable');
+        }
+      } catch (err) {
+        const customPosts = getCustomPosts().filter(p => p.category === currentCat);
+        if (customPosts.length > 0) {
+          allArticles = customPosts;
+          renderFilteredNews();
+        } else {
+          container.innerHTML = `
+            <div class="status-box">
+              <p>${currentLang === 'en' ? 'Unable to load live feed right now. Check your internet connection and click Refresh.' : 'এই মুহূৰ্তত লাইভ বাতৰি লোড কৰিব পৰা নগ’ল। ইণ্টাৰনেট সংযোগ পৰীক্ষা কৰি Refresh টিপক।'}</p>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function renderFilteredNews() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtered = allArticles.filter(art =>
+        art.title.toLowerCase().includes(query) ||
+        art.description.toLowerCase().includes(query) ||
+        art.source.toLowerCase().includes(query)
+      );
+
+      const hero = document.getElementById('heroSection');
+      const container = document.getElementById('newsContainer');
+
+      if (filtered.length === 0) {
+        hero.innerHTML = '';
+        container.innerHTML = `<div class="status-box"><p>${currentLang === 'en' ? 'No matching news found.' : 'কোনো বাতৰি পোৱা নগ’ল।'}</p></div>`;
+        return;
+      }
+
+      // Featured Top Story (Hero)
+      const top = filtered[0];
+      hero.innerHTML = `
+        <article class="hero-card">
+          <div>
+            <span class="hero-badge">${currentLang === 'en' ? 'TOP STORY' : 'শীৰ্ষ বাতৰি'}</span>
+            <h2>${escapeHtml(top.title)}</h2>
+            <p>${escapeHtml(top.description)}</p>
+            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:16px;">
+              <strong>${escapeHtml(top.source)}</strong> • ${formatTimeAgo(top.pubDate)}
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="openReader('${top.id}')">${currentLang === 'en' ? 'Read Summary' : 'সবিশেষ পঢ়ক'}</button>
+              <a href="${top.link}" target="_blank" rel="noopener noreferrer" class="btn">${currentLang === 'en' ? 'Full Article ↗' : 'মূল বাতৰি ↗'}</a>
+              <button class="btn" onclick="toggleBookmark('${top.id}')">${isBookmarked(top.id) ? '★ Saved' : '☆ Save'}</button>
+            </div>
+          </div>
+          <img src="${top.image}" alt="Top news" class="hero-img" onerror="this.src='${fallbackImages[currentCat] || fallbackImages.india}'">
+        </article>
+      `;
+
+      // Remaining Grid
+      const rest = filtered.slice(1);
+      container.innerHTML = `<div class="news-grid">${rest.map(art => buildCardHtml(art)).join('')}</div>`;
+    }
+
+    function buildCardHtml(art) {
+      const saved = isBookmarked(art.id);
+      return `
+        <article class="news-card">
+          <div>
+            <img src="${art.image}" alt="" class="card-thumb" loading="lazy" onerror="this.src='${fallbackImages[art.category] || fallbackImages.india}'">
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="source-tag">${escapeHtml(art.source)}</span>
+                <span>${formatTimeAgo(art.pubDate)}</span>
+              </div>
+              <h3 class="card-title">${escapeHtml(art.title)}</h3>
+              <p class="card-desc">${escapeHtml(art.description)}</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn" onclick="openReader('${art.id}')">${currentLang === 'en' ? 'Read' : 'পঢ়ক'}</button>
+            <div class="card-actions">
+              <button class="btn" onclick="toggleBookmark('${art.id}')" title="Bookmark">${saved ? '★' : '☆'}</button>
+              <a href="${art.link}" target="_blank" rel="noopener noreferrer" class="btn" title="Open Original">↗</a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    // Bookmarks (localStorage)
+    function getBookmarks() {
+      return JSON.parse(localStorage.getItem('dp_bookmarks') || '[]');
+    }
+
+    function isBookmarked(id) {
+      return getBookmarks().some(item => item.id === id);
+    }
+
+    function toggleBookmark(id) {
+      let saved = getBookmarks();
+      const exists = saved.find(item => item.id === id);
+      if (exists) {
+        saved = saved.filter(item => item.id !== id);
+      } else {
+        const article = allArticles.find(a => a.id === id);
+        if (article) saved.unshift(article);
+      }
+      localStorage.setItem('dp_bookmarks', JSON.stringify(saved));
+      if (currentCat === 'saved') {
+        renderSavedNews();
+      } else {
+        renderFilteredNews();
+      }
+    }
+
+    function renderSavedNews() {
+      document.getElementById('heroSection').innerHTML = '';
+      allArticles = getBookmarks();
+      const container = document.getElementById('newsContainer');
+      if (allArticles.length === 0) {
+        container.innerHTML = `<div class="status-box"><p>${currentLang === 'en' ? 'No saved articles yet. Click ☆ on any news card to save it.' : 'এতিয়ালৈকে কোনো বাতৰি সংৰক্ষণ কৰা হোৱা নাই।'}</p></div>`;
+        return;
+      }
+      container.innerHTML = `<div class="news-grid">${allArticles.map(art => buildCardHtml(art)).join('')}</div>`;
+    }
+
+    // Custom News Posts (localStorage)
+    function getCustomPosts() {
+      return JSON.parse(localStorage.getItem('dp_custom_posts') || '[]');
+    }
+
+    function openPostModal() {
+      document.getElementById('postModal').classList.add('open');
+    }
+
+    function saveCustomPost(e) {
+      e.preventDefault();
+      const title = document.getElementById('postTitle').value.trim();
+      const category = document.getElementById('postCategory').value;
+      const source = document.getElementById('postSource').value.trim() || 'Local Desk';
+      const description = document.getElementById('postBody').value.trim();
+
+      const newPost = {
+        id: 'custom_' + Date.now(),
+        title,
+        description,
+        source,
+        category,
+        pubDate: new Date().toISOString(),
+        link: '#custom',
+        image: fallbackImages[category] || fallbackImages.assam
+      };
+
+      const posts = getCustomPosts();
+      posts.unshift(newPost);
+      localStorage.setItem('dp_custom_posts', JSON.stringify(posts));
+
+      e.target.reset();
+      closeModal('postModal');
+      selectCategory(category);
+    }
+
+    // Reader Modal
+    function openReader(id) {
+      const art = allArticles.find(a => a.id === id);
+      if (!art) return;
+      activeModalArticle = art;
+      document.getElementById('modalSource').textContent = art.source;
+      document.getElementById('modalTitle').textContent = art.title;
+      document.getElementById('modalDate').textContent = formatTimeAgo(art.pubDate);
+      document.getElementById('modalContent').textContent = art.description;
+
+      const extLink = document.getElementById('modalOriginalLink');
+      if (art.link && art.link !== '#custom') {
+        extLink.href = art.link;
+        extLink.style.display = 'inline-flex';
+      } else {
+        extLink.style.display = 'none';
+      }
+
+      document.getElementById('readerModal').classList.add('open');
+    }
+
+    function copyCurrentModalText() {
+      if (!activeModalArticle) return;
+      const text = `${activeModalArticle.title}\n\n${activeModalArticle.description}\n(${activeModalArticle.source})`;
+      navigator.clipboard.writeText(text);
+      const btn = document.getElementById('modalCopyBtn');
+      btn.textContent = 'Copied ✓';
+      setTimeout(() => btn.textContent = 'Copy Summary', 1500);
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    // Theme Management
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem('dp_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('dp_theme', next);
+      document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Helpers
+    function formatTimeAgo(dateStr) {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return 'Recent';
+      const diffMins = Math.floor((Date.now() - date.getTime()) / 60000);
+      if (diffMins < 60) return `${Math.max(1, diffMins)}m ago`;
+      const diffHrs = Math.floor(diffMins / 60);
+      if (diffHrs < 24) return `${diffHrs}h ago`;
+      return date.toLocaleDateString();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    init();
+  </script>
+</body>
+</html>
