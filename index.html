@@ -18,6 +18,7 @@
       --accent-red: #d91e18;
       --accent-gold: #b45309;
       --accent-green: #15803d;
+      --accent-blue: #1d4ed8;
       --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
       --radius: 12px;
     }
@@ -32,6 +33,7 @@
       --accent-red: #ef4444;
       --accent-gold: #fbbf24;
       --accent-green: #4ade80;
+      --accent-blue: #60a5fa;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,7 +90,7 @@
     .ticker-content {
       display: inline-block;
       padding-left: 100%;
-      animation: marquee 38s linear infinite;
+      animation: marquee 42s linear infinite;
       font-size: 0.88rem;
       font-weight: 500;
     }
@@ -100,13 +102,12 @@
       100% { transform: translateX(-100%); }
     }
 
-    /* Live Stats Strip (Population, Sensex, Gold) */
+    /* Live Stats Strip */
     .stats-strip {
       background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-color);
       padding: 10px 16px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
       gap: 10px;
       max-width: 1200px;
       margin: 0 auto;
@@ -129,7 +130,7 @@
     }
 
     .stat-val {
-      font-size: 1.02rem;
+      font-size: 1rem;
       font-weight: 700;
       margin-top: 2px;
       font-variant-numeric: tabular-nums;
@@ -137,7 +138,61 @@
 
     .val-green { color: var(--accent-green); }
     .val-gold { color: var(--accent-gold); }
-    .val-red { color: var(--accent-red); }
+
+    /* Live Ad Banner (Gyan Kendra) */
+    .ad-banner-wrap {
+      max-width: 1200px;
+      margin: 14px auto 0;
+      padding: 0 16px;
+    }
+
+    .ad-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+      text-decoration: none;
+    }
+
+    .ad-tag {
+      background: #facc15;
+      color: #111827;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .ad-banner h3 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .ad-banner p {
+      font-size: 0.84rem;
+      color: #dbeafe;
+    }
+
+    .ad-cta {
+      background: #facc15;
+      color: #111827;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
 
     /* Top Controls */
     .top-bar {
@@ -259,6 +314,12 @@
       box-shadow: var(--shadow-sm);
     }
 
+    /* In-Feed Sponsored Card */
+    .sponsored-card {
+      border: 2px solid #2563eb;
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.06) 0%, var(--bg-surface) 100%);
+    }
+
     .card-img {
       width: 100%;
       height: 185px;
@@ -349,7 +410,7 @@
   <div class="ticker-bar">
     <div class="ticker-label"><span class="live-dot"></span> LIVE HEADLINES</div>
     <div class="ticker-track">
-      <div class="ticker-content" id="runningTicker">Loading latest live breaking headlines from Assam, India & World...</div>
+      <div class="ticker-content" id="runningTicker">Loading latest live breaking headlines...</div>
     </div>
   </div>
 
@@ -373,6 +434,18 @@
         <div class="stat-val val-gold" id="goldVal">₹78,450 (22K: ₹71,910)</div>
       </div>
     </div>
+  </div>
+
+  <!-- Live Sponsored Banner for Your Website -->
+  <div class="ad-banner-wrap">
+    <a href="https://gyankendraboromera-svg.github.io/gyan-kendra-boromera-/" target="_blank" rel="noopener noreferrer" class="ad-banner">
+      <div>
+        <span class="ad-tag">★ SPONSORED • GYAN KENDRA BOROMERA</span>
+        <h3>Gyan Kendra Tuition Center & HSLC 2027 Study Materials</h3>
+        <p>SEBA Class X Social Science Notes, Model Papers & Online Admission — By Dipankar Mali (Mali Sir)</p>
+      </div>
+      <span class="ad-cta">Visit Website ↗</span>
+    </a>
   </div>
 
   <!-- Header & Controls -->
@@ -409,11 +482,11 @@
       <h3 style="margin-bottom:12px;">Update Live Sensex & Gold Price</h3>
       <form onsubmit="saveMarketRates(event)">
         <div class="form-row">
-          <label>BSE Sensex Value (যেনে: 79,842.50 ▲ +312.40)</label>
+          <label>BSE Sensex Value</label>
           <input type="text" id="inpSensex" required>
         </div>
         <div class="form-row">
-          <label>Gold Rate 10g (যেনে: ₹78,450 | 22K: ₹71,910)</label>
+          <label>Gold Rate 10g</label>
           <input type="text" id="inpGold" required>
         </div>
         <div style="display:flex; gap:8px; justify-content:flex-end;">
@@ -438,7 +511,6 @@
       { id: 'business', en: 'Business & Market', as: 'ব্যৱসায়' }
     ];
 
-    // Direct Rich RSS Feeds (With real photos + Google News fallback)
     const feeds = {
       en: {
         assam: 'https://news.google.com/rss/search?q=Assam+Guwahati+Northeast+when:1d&hl=en-IN&gl=IN&ceid=IN:en',
@@ -458,7 +530,6 @@
       }
     };
 
-    // Unique Diverse Image Pools per Category so NO image repeats!
     const imagePools = {
       assam: [
         'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=700&q=80',
@@ -510,7 +581,6 @@
       ]
     };
 
-    // Real-time Live Population Counter (World ~2.3/sec, Assam ~0.015/sec)
     function startLiveCounters() {
       const baseTime = new Date('2026-11-21T00:00:00Z').getTime();
       const baseWorld = 8245500000;
@@ -531,7 +601,6 @@
       }, 1000);
     }
 
-    // Load Saved Sensex & Gold Rates
     function loadMarketRates() {
       const s = localStorage.getItem('dp_sensex') || '79,842.50 ▲ +312.40';
       const g = localStorage.getItem('dp_gold') || '₹78,450 (22K: ₹71,910)';
@@ -581,14 +650,12 @@
       loadLiveNews(true);
     }
 
-    // Fetch Fresh Non-Cached Live RSS via AllOrigins XML Parser
     async function loadLiveNews(showLoader = false) {
       const area = document.getElementById('newsArea');
       if (showLoader) {
         area.innerHTML = `<div class="loader">⏳ ${lang === 'en' ? 'Fetching fresh live news...' : 'নতুন লাইভ বাতৰি সংগ্ৰহ কৰি থকা হৈছে...'}</div>`;
       }
 
-      // Cache-busting timestamp ensures fresh live news every time!
       const rawRss = feeds[lang][activeCat] + (feeds[lang][activeCat].includes('?') ? '&' : '?') + '_t=' + Date.now();
       const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rawRss)}`;
 
@@ -605,11 +672,10 @@
         const pool = imagePools[activeCat] || imagePools.india;
         articles = [];
 
-        items.forEach((item, index) => {
+        items.forEach((item) => {
           const rawTitle = item.querySelector('title')?.textContent || '';
           const cleanTitle = rawTitle.replace(/\s-\s[^-]+$/, '').trim();
 
-          // Deduplicate repeated headlines
           if (!cleanTitle || seenTitles.has(cleanTitle.toLowerCase())) return;
           seenTitles.add(cleanTitle.toLowerCase());
 
@@ -621,12 +687,10 @@
           const pubDate = item.querySelector('pubDate')?.textContent || '';
           const descHtml = item.querySelector('description')?.textContent || '';
 
-          // Extract real image from RSS if available
           const mediaContent = item.getElementsByTagName('media:content')[0]?.getAttribute('url');
           const enclosure = item.querySelector('enclosure')?.getAttribute('url');
           const imgMatch = descHtml.match(/<img[^>]+src="([^">]+)"/);
 
-          // Assign distinct image from pool if RSS has no image
           const distinctFallback = pool[articles.length % pool.length];
           const finalImg = mediaContent || enclosure || (imgMatch ? imgMatch[1] : distinctFallback);
 
@@ -645,11 +709,11 @@
           });
         });
 
-        // Sort newest first
         articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
-        // Update Running Live Ticker
-        const tickerHeadlines = articles.slice(0, 10).map(a => `🔴 ${a.title} (${a.source})`).join('   •   ');
+        // Include Gyan Kendra Live Promo inside Running Ticker
+        const adTicker = '⭐ Gyan Kendra Tuition Center, Boromera: HSLC 2027 Study Materials & Online Registration Open!';
+        const tickerHeadlines = adTicker + '   •   ' + articles.slice(0, 9).map(a => `🔴 ${a.title} (${a.source})`).join('   •   ');
         document.getElementById('runningTicker').textContent = tickerHeadlines;
 
         document.getElementById('lastUpdated').textContent =
@@ -663,26 +727,56 @@
 
     function renderCards() {
       const area = document.getElementById('newsArea');
-      area.innerHTML = `<div class="news-grid">${articles.map(art => `
-        <article class="news-card">
-          <div>
-            <img src="${art.image}" alt="" class="card-img" loading="lazy" onerror="this.src='${art.fallbackImg}'">
-            <div class="card-body">
-              <div class="card-meta">
-                <span>${esc(art.source)}</span>
-                <span>${timeAgo(art.pubDate)}</span>
+      const cardsHtml = [];
+
+      articles.forEach((art, idx) => {
+        // Insert In-Feed Sponsored Card after every 4th news card
+        if (idx === 3) {
+          cardsHtml.push(`
+            <article class="news-card sponsored-card">
+              <div>
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=80" alt="Gyan Kendra" class="card-img">
+                <div class="card-body">
+                  <div class="card-meta">
+                    <span style="color:#2563eb;">★ SPONSORED AD</span>
+                    <span>Boromera, Assam</span>
+                  </div>
+                  <h3 class="card-title">Gyan Kendra Tuition Center — HSLC 2027 Preparation</h3>
+                  <p class="card-desc">Download Class X Social Science notes, SEBA model question papers, and register online at Gyan Kendra Boromera.</p>
+                </div>
               </div>
-              <h3 class="card-title">${esc(art.title)}</h3>
-              <p class="card-desc">${esc(art.description)}</p>
+              <div class="card-foot">
+                <a href="https://gyankendraboromera-svg.github.io/gyan-kendra-boromera-/" target="_blank" rel="noopener noreferrer" class="btn btn-red" style="text-decoration:none; background:#2563eb; border-color:#2563eb;">
+                  Open Gyan Kendra Website ↗
+                </a>
+              </div>
+            </article>
+          `);
+        }
+
+        cardsHtml.push(`
+          <article class="news-card">
+            <div>
+              <img src="${art.image}" alt="" class="card-img" loading="lazy" onerror="this.src='${art.fallbackImg}'">
+              <div class="card-body">
+                <div class="card-meta">
+                  <span>${esc(art.source)}</span>
+                  <span>${timeAgo(art.pubDate)}</span>
+                </div>
+                <h3 class="card-title">${esc(art.title)}</h3>
+                <p class="card-desc">${esc(art.description)}</p>
+              </div>
             </div>
-          </div>
-          <div class="card-foot">
-            <a href="${art.link}" target="_blank" rel="noopener noreferrer" class="btn btn-red" style="text-decoration:none;">
-              ${lang === 'en' ? 'Read Full News ↗' : 'সম্পূৰ্ণ বাতৰি পঢ়ক ↗'}
-            </a>
-          </div>
-        </article>
-      `).join('')}</div>`;
+            <div class="card-foot">
+              <a href="${art.link}" target="_blank" rel="noopener noreferrer" class="btn btn-red" style="text-decoration:none;">
+                ${lang === 'en' ? 'Read Full News ↗' : 'সম্পূৰ্ণ বাতৰি পঢ়ক ↗'}
+              </a>
+            </div>
+          </article>
+        `);
+      });
+
+      area.innerHTML = `<div class="news-grid">${cardsHtml.join('')}</div>`;
     }
 
     function timeAgo(d) {
@@ -706,14 +800,12 @@
       document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
     }
 
-    // Initialize everything
     document.getElementById('langBtn').textContent = lang === 'en' ? 'অসমীয়া পঢ়ক' : 'Read in English';
     renderCats();
     loadMarketRates();
     startLiveCounters();
     loadLiveNews(true);
 
-    // Auto-refresh live news every 2 minutes
     setInterval(() => loadLiveNews(false), 120000);
   </script>
 </body>
